@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/news_nav_graph"
+    app:startDestination="@id/addLocationFragment">
+    <fragment
+        android:id="@+id/addLocationFragment"
+        android:name="com.ravi.weathertask.ui.fragment.addlocations.AddLocationFragment"
+        android:label="fragment_add_location"
+        tools:layout="@layout/fragment_add_location" />
+    <fragment
+        android:id="@+id/locationBookmarkFragment"
+        android:name="com.ravi.weathertask.ui.fragment.locationbookmark.LocationBookmarkFragment"
+        android:label="fragment_location_bookmark"
+        tools:layout="@layout/fragment_location_bookmark" >
+        <action
+            android:id="@+id/action_locationBookmarkFragment_to_cityFragment"
+            app:destination="@id/cityFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/cityFragment"
+        android:name="com.ravi.weathertask.ui.fragment.city.CityFragment"
+        android:label="fragment_city"
+        tools:layout="@layout/fragment_city" >
+        <argument
+            android:name="latitude"
+            app:argType="string" />
+        <argument
+            android:name="longitude"
+            app:argType="string" />
+    </fragment>
+</navigation>
