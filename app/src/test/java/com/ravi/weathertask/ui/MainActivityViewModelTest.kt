@@ -130,4 +130,22 @@ class MainActivityViewModelTest{
             verify(bookmarkEmptyObserver).onChanged(false)
         }
     }
+
+    @Test
+    fun test_deleteAllLocations(){
+        testCoroutineRule.runBlockingTest {
+
+            val locationList = mutableListOf<LocationEntity>()
+
+            Mockito.doReturn(locationList)
+                .`when`(weatherRepository)
+                .getCityList()
+
+            mainActivityViewModel.deleteAllBookmarks()
+            verify(weatherRepository).deleteAllCities()
+
+            verify(bookmarkEmptyObserver).onChanged(true)
+
+        }
+    }
 }

@@ -1,7 +1,7 @@
 package com.ravi.weathertask.di
 
 
-import com.ravi.weathertask.NetworkApiService
+import com.ravi.weathertask.repository.remote.NetworkApiService
 import com.ravi.weathertask.repository.WeatherRepository
 import com.ravi.weathertask.repository.local.WeatherDao
 import dagger.Module

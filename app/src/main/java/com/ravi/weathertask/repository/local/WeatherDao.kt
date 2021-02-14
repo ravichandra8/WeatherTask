@@ -17,4 +17,7 @@ interface WeatherDao {
     @Query("Delete FROM location WHERE id = :id")
     suspend fun deleteCityBasedOnId(id:Int)
 
+    @Query("Delete FROM location")
+    suspend fun deleteAllCities()
+
 }

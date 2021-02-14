@@ -44,6 +44,7 @@ class LocationBookmarkFragment : Fragment(),DeleteBookmarkCallback {
 
             mainActivityViewModel.getLocations()
 
+
             fragmentLocationBookmarkBinding.rv.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
             val linearLayoutManager = LinearLayoutManager(activity)
             fragmentLocationBookmarkBinding.rv.layoutManager = linearLayoutManager

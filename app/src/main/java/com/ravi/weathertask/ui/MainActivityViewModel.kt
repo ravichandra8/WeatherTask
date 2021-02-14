@@ -45,11 +45,18 @@ constructor(private val weatherRepository: WeatherRepository) : ViewModel(){
         }
     }
 
-   private fun checkCityListEmpty() {
+    fun checkCityListEmpty() {
        viewModelScope.launch {
            val locationList: List<LocationEntity> = weatherRepository.getCityList()
            bookmarkEmpty.value = locationList.isEmpty()
        }
+    }
+
+    fun deleteAllBookmarks() {
+        viewModelScope.launch {
+            weatherRepository.deleteAllCities()
+            checkCityListEmpty()
+        }
     }
 
 }

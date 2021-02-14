@@ -1,13 +1,11 @@
 package com.ravi.weathertask.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.ravi.weathertask.NetworkApiService
+import com.ravi.weathertask.repository.remote.NetworkApiService
 import com.ravi.weathertask.repository.local.LocationEntity
 import com.ravi.weathertask.repository.local.WeatherDao
 import com.ravi.weathertask.repository.remote.ForecastParentResponse
-import com.ravi.weathertask.utils.Constants
 import com.ravi.weathertask.utils.TestCoroutineRule
-import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert
 import org.junit.Before
@@ -76,6 +74,14 @@ class WeatherRepositoryTest {
         testCoroutineRule.runBlockingTest {
             weatherRepository.deleteCityBasedOnId(1)
             verify(weatherDao).deleteCityBasedOnId(1)
+        }
+    }
+
+    @Test
+    fun test_deleteAllCities(){
+        testCoroutineRule.runBlockingTest {
+            weatherRepository.deleteAllCities()
+            verify(weatherDao).deleteAllCities()
         }
     }
     @Test

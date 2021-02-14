@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -45,15 +46,7 @@ class AddLocationFragment : Fragment() {
     private val callback = OnMapReadyCallback { googleMap ->
 
         this.googleMap = googleMap
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
+
         val sydney = LatLng(17.403926158764616, 78.47301498055457)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 7f))
         googleMap.setOnMapClickListener {
@@ -61,7 +54,8 @@ class AddLocationFragment : Fragment() {
             getAddress(it)
         }
 
-          displayMarkersBasedonLocation()
+        displayMarkersBasedonLocation()
+        clearLocations()
     }
 
     override fun onCreateView(
@@ -78,10 +72,26 @@ class AddLocationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+        fragmentAddLocationBinding.fab.setOnClickListener {
+            Navigation.findNavController(fragmentAddLocationBinding.root).navigate(R.id.action_addLocationFragment_to_locationBookmarkFragment)
 
+        }
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         mainActivityViewModel.getLocations()
 
+
+    }
+
+    private fun clearLocations(){
+        lifecycleScope.launchWhenStarted {
+            activity?.let {
+                mainActivityViewModel.bookmarkEmpty.observe(it,{ flag ->
+                    if(flag) {
+                        googleMap.clear()
+                    }
+                })
+            }
+            }
     }
 
     private fun displayMarkersBasedonLocation() {
@@ -120,7 +130,13 @@ class AddLocationFragment : Fragment() {
                                     city = city
                                 )
                             )
-
+                            withContext(Dispatchers.Main) {
+                                Snackbar.make(
+                                    fragmentAddLocationBinding.root,
+                                    "Location saved.",
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
