@@ -79,7 +79,7 @@ class AddLocationFragment : Fragment() {
         mainActivityViewModel.getLocations()
 
         activity?.let {
-            mainActivityViewModel.mutableLiveData.observe(it, {
+            mainActivityViewModel.cityListMutableLiveData.observe(it, {
                 googleMap.clear()
                 it.map { locationEnitity ->
                     googleMap.addMarker(MarkerOptions().position(LatLng(locationEnitity.latitude,locationEnitity.longitude)))

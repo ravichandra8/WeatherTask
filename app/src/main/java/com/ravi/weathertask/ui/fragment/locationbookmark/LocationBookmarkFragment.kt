@@ -55,7 +55,7 @@ class LocationBookmarkFragment : Fragment(),DeleteBookmarkCallback {
                     fragmentLocationBookmarkBinding.rv.isVisible = !flag
                 })
 
-                mainActivityViewModel.mutableLiveData.observe(it, { cityList ->
+                mainActivityViewModel.cityListMutableLiveData.observe(it, { cityList ->
                     val bookmarkAdapter = BookmarkAdapter(cityList as MutableList,this@LocationBookmarkFragment)
                     fragmentLocationBookmarkBinding.rv.adapter = bookmarkAdapter
                 })

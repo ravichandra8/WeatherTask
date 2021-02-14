@@ -19,7 +19,7 @@ class MainActivityViewModel
 @Inject
 constructor(private val weatherRepository: WeatherRepository) : ViewModel(){
 
-    val mutableLiveData = MutableLiveData<List<LocationEntity>>()
+    val cityListMutableLiveData = MutableLiveData<List<LocationEntity>>()
     val bookmarkEmpty = MutableLiveData<Boolean>()
 
     fun saveLocation(locationEntity: LocationEntity){
@@ -32,23 +32,24 @@ constructor(private val weatherRepository: WeatherRepository) : ViewModel(){
         viewModelScope.launch {
            val locationList :List<LocationEntity> = weatherRepository.getCityList()
             if(locationList.isNotEmpty()){
-                mutableLiveData.value = locationList
-                bookmarkEmpty.value = false
-            } else {
-                bookmarkEmpty.value = true
+                cityListMutableLiveData.value = locationList
             }
-
+            checkCityListEmpty()
         }
     }
 
     fun deleteBookmark(id:Int){
         viewModelScope.launch {
             weatherRepository.deleteCityBasedOnId(id)
-            val locationList :List<LocationEntity> = weatherRepository.getCityList()
-            if(locationList.isEmpty()){
-                bookmarkEmpty.value = true
-            }
+            checkCityListEmpty()
         }
+    }
+
+   private fun checkCityListEmpty() {
+       viewModelScope.launch {
+           val locationList: List<LocationEntity> = weatherRepository.getCityList()
+           bookmarkEmpty.value = locationList.isEmpty()
+       }
     }
 
 }
