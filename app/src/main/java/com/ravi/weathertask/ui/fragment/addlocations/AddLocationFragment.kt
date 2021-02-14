@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
+import android.text.BoringLayout.make
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,8 +23,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.make
 import com.ravi.weathertask.ui.MainActivityViewModel
 import com.ravi.weathertask.R
+import com.ravi.weathertask.databinding.FragmentAddLocationBinding
+import com.ravi.weathertask.databinding.FragmentCityBinding
 import com.ravi.weathertask.repository.local.LocationEntity
 import com.ravi.weathertask.utils.LocationAddress
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +41,7 @@ import kotlinx.coroutines.withContext
 class AddLocationFragment : Fragment() {
     private lateinit var googleMap: GoogleMap
     private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var fragmentAddLocationBinding: FragmentAddLocationBinding
     private val callback = OnMapReadyCallback { googleMap ->
 
         this.googleMap = googleMap
@@ -48,14 +54,14 @@ class AddLocationFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        val sydney = LatLng(17.403926158764616,78.47301498055457)
-//        googleMap.uiSettings.isScrollGesturesEnabled = true
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,7f))
+        val sydney = LatLng(17.403926158764616, 78.47301498055457)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 7f))
         googleMap.setOnMapClickListener {
-            Log.d("sagu",it.latitude.toString())
             googleMap.addMarker(MarkerOptions().position(it).title("B1"))
             getAddress(it)
         }
+
+          displayMarkersBasedonLocation()
     }
 
     override fun onCreateView(
@@ -63,12 +69,9 @@ class AddLocationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.fragment_add_location, container, false)
+        fragmentAddLocationBinding = FragmentAddLocationBinding.inflate(inflater, container, false)
+        return fragmentAddLocationBinding.root
 
-        mainActivityViewModel  = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-
-
-        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,33 +79,59 @@ class AddLocationFragment : Fragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
 
+        mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         mainActivityViewModel.getLocations()
 
-        activity?.let {
-            mainActivityViewModel.cityListMutableLiveData.observe(it, {
-                googleMap.clear()
-                it.map { locationEnitity ->
-                    googleMap.addMarker(MarkerOptions().position(LatLng(locationEnitity.latitude,locationEnitity.longitude)))
-                }
+    }
 
-            })
+    private fun displayMarkersBasedonLocation() {
+        lifecycleScope.launchWhenStarted {
+            activity?.let {
+                mainActivityViewModel.cityListMutableLiveData.observe(it, {
+                    googleMap.clear()
+                    it.map { locationEnitity ->
+                        googleMap.addMarker(
+                            MarkerOptions().position(
+                                LatLng(
+                                    locationEnitity.latitude,
+                                    locationEnitity.longitude
+                                )
+                            )
+                        )
+                    }
+
+                })
+            }
         }
     }
 
-    private fun getAddress(latLng:LatLng){
+    private fun getAddress(latLng: LatLng) {
         lifecycleScope.launchWhenStarted {
             activity?.let {
                 withContext(Dispatchers.Default) {
                     var city =
                         LocationAddress.getCityFromLatLng(latLng.latitude, latLng.longitude, it)
-                    city?.let { city ->
+                    if (city != null) {
                         withContext(Dispatchers.IO) {
                             mainActivityViewModel.saveLocation(
-                              LocationEntity(latitude= latLng.latitude,
-                                 longitude =  latLng.longitude,
-                                 city =  city)
+                                LocationEntity(
+                                    latitude = latLng.latitude,
+                                    longitude = latLng.longitude,
+                                    city = city
+                                )
                             )
+
                         }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Snackbar.make(
+                                fragmentAddLocationBinding.root,
+                                "Unable to fetch your location. Please check internet and try again",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                        displayMarkersBasedonLocation()
+
                     }
                 }
             }

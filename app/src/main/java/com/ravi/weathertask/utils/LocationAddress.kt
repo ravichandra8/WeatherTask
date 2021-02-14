@@ -11,15 +11,19 @@ object LocationAddress {
             context,
             Locale.getDefault()
         )
-        val addressList = geoCoder.getFromLocation(
-            latitude, longitude, 1
-        )
-        if(addressList != null && addressList.size > 0){
-            return if(addressList[0].locality != null){
-                addressList[0].locality
-            } else{
-                addressList[0].subAdminArea
+        try {
+            val addressList = geoCoder.getFromLocation(
+                latitude, longitude, 1
+            )
+            if (addressList != null && addressList.size > 0) {
+                return if (addressList[0].locality != null) {
+                    addressList[0].locality
+                } else {
+                    addressList[0].subAdminArea
+                }
             }
+        }catch (ex:Exception){
+            return null
         }
         return null
     }

@@ -1,19 +1,12 @@
 package com.ravi.weathertask.ui.fragment.city
 
-import android.app.Activity
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 import com.ravi.weathertask.R
 import com.ravi.weathertask.databinding.FragmentCityBinding
@@ -29,11 +22,7 @@ class CityFragment : Fragment() {
     private lateinit var fragmentCityBinding: FragmentCityBinding
     val args: CityFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("oncreate", "oncreate")
-        cityViewModel = ViewModelProvider(this).get(CityViewModel::class.java)
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +35,7 @@ class CityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cityViewModel = ViewModelProvider(this).get(CityViewModel::class.java)
 
 
         lifecycleScope.launchWhenStarted {
@@ -90,7 +80,7 @@ class CityFragment : Fragment() {
                         "HH:mm"
                     )
                 })
-                cityViewModel.hideBackNavButton.observe(it, { state ->
+                cityViewModel.showBackNavButton.observe(it, { state ->
                     fragmentCityBinding.back.isClickable = state
                     if (state) {
                         fragmentCityBinding.back.setImageResource(R.drawable.ic_baseline_arrow_back_white_ios_24)
