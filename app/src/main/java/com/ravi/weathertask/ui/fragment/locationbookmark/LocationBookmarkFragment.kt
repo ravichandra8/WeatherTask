@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -48,6 +49,12 @@ class LocationBookmarkFragment : Fragment(),DeleteBookmarkCallback {
             fragmentLocationBookmarkBinding.rv.layoutManager = linearLayoutManager
 
             activity?.let {
+
+                mainActivityViewModel.bookmarkEmpty.observe(it,{ flag ->
+                    fragmentLocationBookmarkBinding.bookmarkEmpty.isVisible = flag
+                    fragmentLocationBookmarkBinding.rv.isVisible = !flag
+                })
+
                 mainActivityViewModel.mutableLiveData.observe(it, { cityList ->
                     val bookmarkAdapter = BookmarkAdapter(cityList as MutableList,this@LocationBookmarkFragment)
                     fragmentLocationBookmarkBinding.rv.adapter = bookmarkAdapter

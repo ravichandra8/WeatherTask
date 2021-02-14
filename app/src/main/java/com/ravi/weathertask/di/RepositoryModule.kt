@@ -16,7 +16,7 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideSnsRepository(
+    fun provideWeatherRepository(
         networkApiService: NetworkApiService,
         weatherDao :WeatherDao
     ): WeatherRepository {

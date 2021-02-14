@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.ravi.weathertask.ui.MainActivityViewModel
 import com.ravi.weathertask.R
+import com.ravi.weathertask.repository.local.LocationEntity
 import com.ravi.weathertask.utils.LocationAddress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -97,9 +98,9 @@ class AddLocationFragment : Fragment() {
                     city?.let { city ->
                         withContext(Dispatchers.IO) {
                             mainActivityViewModel.saveLocation(
-                                latLng.latitude,
-                                latLng.longitude,
-                                city
+                              LocationEntity(latitude= latLng.latitude,
+                                 longitude =  latLng.longitude,
+                                 city =  city)
                             )
                         }
                     }

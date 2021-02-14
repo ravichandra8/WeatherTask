@@ -49,7 +49,7 @@ object NetworkModule {
     }
     @Singleton
     @Provides
-    fun provideSnsService(retrofit: Retrofit.Builder): NetworkApiService{
+    fun provideWeatherService(retrofit: Retrofit.Builder): NetworkApiService{
         return retrofit.build().create(NetworkApiService::class.java)
     }
 }

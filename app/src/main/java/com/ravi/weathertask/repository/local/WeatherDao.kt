@@ -12,7 +12,7 @@ interface WeatherDao {
     suspend fun insert(locationEntity : LocationEntity): Long
 
     @Query("SELECT * FROM location")
-    suspend fun get(): List<LocationEntity>
+    suspend fun getcityList(): List<LocationEntity>
 
     @Query("Delete FROM location WHERE id = :id")
     suspend fun deleteCityBasedOnId(id:Int)

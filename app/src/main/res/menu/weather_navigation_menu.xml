@@ -3,7 +3,7 @@
 
     <item android:id="@+id/addLocationFragment"
         android:title="Add Locations"
-        android:icon="@drawable/ic_baseline_bookmark_24" />
+        android:icon="@drawable/ic_baseline_add_location_24" />
 
     <item android:id="@+id/locationBookmarkFragment"
         android:title="Bookmarks"

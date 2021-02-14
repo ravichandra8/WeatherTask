@@ -9,11 +9,12 @@ import retrofit2.Response
 class WeatherRepository
     constructor(private val networkApiService: NetworkApiService,private val weatherDao: WeatherDao) {
 
-        suspend fun addCity(locationEntity: LocationEntity) =
-            weatherDao.insert(locationEntity)
+        suspend fun addCity(locationEntity: LocationEntity):Long {
+         return   weatherDao.insert(locationEntity)
+        }
 
 
-        suspend fun getCityList() = weatherDao.get()
+        suspend fun getCityList() = weatherDao.getcityList()
 
         suspend fun deleteCityBasedOnId(id:Int) = weatherDao.deleteCityBasedOnId(id)
 
