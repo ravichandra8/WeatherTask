@@ -1,6 +1,5 @@
 package com.ravi.weathertask.repository.local
 
-import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -19,6 +18,9 @@ data class LocationEntity(
     var latitude: Double,
 
     @ColumnInfo(name = "longitude")
-    var longitude: Double
+    var longitude: Double,
+
+    @ColumnInfo(name = "isLocationAdded")
+    var isLocationAdded: Int = 0
 
 )
